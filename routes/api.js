@@ -11,3 +11,60 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid')
 // helper file
 const { readFromFile, readAndAppend, writeToFile } = require("../helpers/fsUtils");
+
+// database filepath
+const db = "./db/db.json"
+
+// get notes from db and parse
+router.get("/", (req, res) => {
+      readFromFile(`${db}`).then((data) => res.json(JSON.parse(data)));
+});
+
+// post new notes to db
+router.post("/", (req, res) => {
+      const { title, text } = req.body;
+      // error for no input
+      if (!title || !text) {
+            res.status(400).json({msg: 'You are required to input both a title and text for each note!'})
+      // create new note variable if input given
+      } else if (title && text) {
+            const newNote = {
+                  title,
+                  text,
+                  id: uuidv4()
+            }
+
+            // function from fsutils, append to db
+            readAndAppend(newNote, `${db}`)
+
+            // successful response
+            const response = {
+                  status: "success",
+                  body: newNote,
+                };
+                res.json(response);
+            // error response
+            } else {
+              res.json(`Oh no :( there's been an error appending your note`);
+      }
+    
+})
+
+// delete route
+router.delete('/:id', (req, res) => {
+      // id variable
+      const noteID = req.params.id;
+      // imported function
+      readFromFile('${db}')
+      // parse notes
+      .then((data) => JSON.parse(data))
+      // filter out deleted id and create new note list
+      .then((json) => {
+            const filteredNotes = json.filer((note) => (note) !== (noteID));
+            // update page with filtered list
+            writeToFile('${db}', filteredNotes);
+            res.json('This note has been successfully deleted')
+      }) 
+})
+
+module.exports = router;
