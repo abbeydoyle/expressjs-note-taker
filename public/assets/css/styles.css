@@ -99,3 +99,8 @@ body {
   color: #373e30 !important;
   font-size: 2rem;
 }
+
+.jumbotron {
+  background-color: antiquewhite !important;
+  color: #373e30 !important;
+}
