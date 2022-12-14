@@ -59,10 +59,10 @@ notes.delete(`/:id`, (req, res) => {
       .then((data) => JSON.parse(data))
       // filter out deleted id and create new note list
       .then((json) => {
-            const filteredNotes = json.filter((note) => note !== noteID);
+            const filteredNotes = json.filter((note) => note.id !== noteID);
             // update page with filtered list
             writeToFile(`${db}`, filteredNotes);
-            res.json('This note has been successfully deleted')
+            res.json(`This note has been successfully deleted`)
       }) 
 })
 
