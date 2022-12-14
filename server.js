@@ -25,6 +25,22 @@ app.use(express.static('public'));
 app.use('/api', api);
 app.use('/', html);
 
+// get route notes page
+app.get('/notes', (req, res) => {
+      res.sendFile(path.join(__dirname, '../public/notes.html'));
+  });
+  
+// get route homepage
+app.get('/', (req, res) => {
+      res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
+
+// get route default homepage
+app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
+
+
 // local host listener
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
